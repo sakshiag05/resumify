@@ -1,6 +1,6 @@
 
 
-Response B is better than Response A
+Response B is better than Response A.
 Response A functions well as a conceptual design document. It covers all required
 system components, uses clear visual formatting, and would serve as a useful
 reference spec or whiteboard overview. However, it does not satisfy the core
