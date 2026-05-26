@@ -1,10 +1,10 @@
-# Prompt: Build a Two-Agent Secure RAG Pipeline with Guardrails and Streamlit UI
 
 ## Domain
 Cybersecurity / AI/ML Engineering
 
 ## Task Overview
-Build a production-ready, security-hardened Retrieval-Augmented Generation (RAG) system
+Build a Two-Agent Secure RAG Pipeline with Guardrails and Streamlit UI.
+it should be production-ready, security-hardened Retrieval-Augmented Generation (RAG) system
 in Python that routes every user query through a two-agent pipeline before answering.
 The system must protect against prompt injection and jailbreak attacks while remaining
 helpful for legitimate queries. Expose the full system through a live-streaming Streamlit UI.
