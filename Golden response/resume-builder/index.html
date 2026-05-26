@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResumeAI Builder</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Optional: Heroicons for UI -->
+  <script src="https://unpkg.com/@heroicons/react@2.0.18/umd/heroicons.min.js"></script>
+  <style>
+    /* Glassmorphism background */
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .neon {
+      text-shadow: 0 0 6px #00f6ff, 0 0 12px #00f6ff;
+    }
+    .transition-all {
+      transition: all 0.2s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+  <header class="bg-gray-800/80 glass py-4 px-6 flex justify-between items-center sticky top-0 z-10">
+    <h1 class="text-2xl font-bold neon">ResumeAI</h1>
+    <nav class="hidden md:flex gap-6 text-gray-300">
+      <a href="#" class="hover:text-white transition">Features</a>
+      <a href="#" class="hover:text-white transition">Templates</a>
+      <a href="#" class="hover:text-white transition">Pricing</a>
+    </nav>
+  </header>
+  <main class="flex-1 container mx-auto px-4 py-6 grid gap-6 lg:grid-cols-3">
+    <!-- Dashboard / Controls -->
+    <section class="lg:col-span-1 glass p-4 rounded-lg space-y-4">
+      <h2 class="text-xl font-semibold mb-2">Create / Edit Resume</h2>
+      <div class="space-y-2">
+        <label class="block">Name</label>
+        <input type="text" id="name" class="w-full rounded bg-gray-800 border border-gray-700 focus:border-indigo-500 focus:outline-none p-2" placeholder="John Doe" />
+      </div>
+      <div class="space-y-2">
+        <label class="block">Title</label>
+        <input type="text" id="title" class="w-full rounded bg-gray-800 border border-gray-700 focus:border-indigo-500 focus:outline-none p-2" placeholder="Frontend Developer" />
+      </div>
+      <div class="space-y-2">
+        <label class="block">Summary</label>
+        <textarea id="summary" class="w-full rounded bg-gray-800 border border-gray-700 focus:border-indigo-500 focus:outline-none p-2" rows="4" placeholder="A passionate developer..."></textarea>
+      </div>
+      <div class="space-y-2">
+        <label class="block">Template</label>
+        <select id="template" class="w-full rounded bg-gray-800 border border-gray-700 focus:border-indigo-500 focus:outline-none p-2">
+          <option value="modern">Modern</option>
+          <option value="executive">Executive</option>
+        </select>
+      </div>
+      <button id="mockAi" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded transition">🤖 Optimize with AI</button>
+      <button id="upgrade" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white py-2 rounded transition">💳 Upgrade (Stripe Mock)</button>
+    </section>
+    <!-- Live Preview -->
+    <section class="lg:col-span-2 glass p-6 rounded-lg overflow-auto" id="previewContainer">
+      <div id="resumePreview" class="space-y-4"></div>
+    </section>
+  </main>
+  <footer class="bg-gray-800 py-4 text-center text-gray-400">
+    © 2026 ResumeAI – All rights reserved.
+  </footer>
+
+  <script type="text/javascript">
+    const { useState, useEffect } = React;
+
+    function ResumePreview({ data }) {
+      const containerClass = data.template === 'executive' ? 'font-serif text-gray-100' : 'font-sans text-gray-200';
+      const titleClass = data.template === 'executive' ? 'text-2xl font-bold' : 'text-xl font-bold';
+      return React.createElement('div', { className: containerClass },
+        React.createElement('h2', { className: titleClass }, data.title || ''),
+        React.createElement('p', { className: 'text-sm' }, data.summary || ''),
+        // Placeholder for experience/skills sections
+        React.createElement('section', null,
+          React.createElement('h3', { className: 'font-medium mt-4' }, 'Experience'),
+          React.createElement('p', { className: 'text-sm' }, 'Add experience entries...')
+        ),
+        React.createElement('section', null,
+          React.createElement('h3', { className: 'font-medium mt-4' }, 'Skills'),
+          React.createElement('p', { className: 'text-sm' }, 'Add skill tags...')
+        )
+      );
+    }
+
+    function App() {
+      const [data, setData] = useState({
+        name: '', title: '', summary: '', template: 'modern'
+      });
+
+      useEffect(() => {
+        const preview = ReactDOM.createRoot(document.getElementById('resumePreview'));
+        preview.render(React.createElement(ResumePreview, { data }));
+      }, [data]);
+
+      // Inline listeners
+      useEffect(() => {
+        const updateField = (id, key) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.addEventListener('input', (e) => setData(prev => ({ ...prev, [key]: e.target.value })));
+          }
+        };
+        updateField('name', 'name');
+        updateField('title', 'title');
+        updateField('summary', 'summary');
+        const tmpl = document.getElementById('template');
+        if (tmpl) tmpl.addEventListener('change', e => setData(prev => ({ ...prev, template: e.target.value })));
+
+        document.getElementById('mockAi').addEventListener('click', () => {
+          // Simple mock: prepend AI tag to summary
+          setData(prev => ({ ...prev, summary: '[AI Optimized] ' + prev.summary }));
+        });
+        document.getElementById('upgrade').addEventListener('click', () => {
+          alert('Stripe mock: subscription successful! 🎉');
+        });
+      }, []);
+
+      return null; // DOM manipulation done above
+    }
+
+    ReactDOM.createRoot(document.getElementById('previewContainer')).render(React.createElement(App));
+  </script>
+</body>
+</html>
